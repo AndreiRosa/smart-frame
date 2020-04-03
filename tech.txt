@@ -1,4 +1,0 @@
-FIREBASE - BACKEND
-react
-gatsby
-postcss / tailwind

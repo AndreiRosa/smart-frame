@@ -9,6 +9,7 @@ exports.components = {
   "component---src-pages-app-js": hot(preferDefault(require("C:\\Users\\andre\\Desktop\\smart_frame\\src\\pages\\app.js"))),
   "component---src-pages-create-account-js": hot(preferDefault(require("C:\\Users\\andre\\Desktop\\smart_frame\\src\\pages\\create-account.js"))),
   "component---src-pages-d-js": hot(preferDefault(require("C:\\Users\\andre\\Desktop\\smart_frame\\src\\pages\\d.js"))),
-  "component---src-pages-index-js": hot(preferDefault(require("C:\\Users\\andre\\Desktop\\smart_frame\\src\\pages\\index.js")))
+  "component---src-pages-index-js": hot(preferDefault(require("C:\\Users\\andre\\Desktop\\smart_frame\\src\\pages\\index.js"))),
+  "component---src-pages-sign-in-js": hot(preferDefault(require("C:\\Users\\andre\\Desktop\\smart_frame\\src\\pages\\sign-in.js")))
 }
 

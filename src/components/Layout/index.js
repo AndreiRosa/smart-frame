@@ -4,12 +4,12 @@ import Header from '../Header'
 import Footer from '../Footer'
 import {AuthProvider} from '../../lib/AuthContext'
 
-const Layout = ({ children }) => {
+const Layout = ({ children, app=false }) => {
   return (
     <AuthProvider>
       <div className='font-sans bg-white flex flex-col min-h-screen w-full'>
         <div>   
-          <Header />
+          <Header app={app}/>
           {children}
           <Footer />
         </div>
