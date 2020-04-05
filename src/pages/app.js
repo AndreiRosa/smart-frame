@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useState} from 'react'
 import {Router} from '@reach/router'
 import Layout from '../components/Layout'
 import {navigate} from 'gatsby'
@@ -7,7 +7,7 @@ import CreateScene from '../client-side-routes/app/CreateScene'
 import Scenes from '../client-side-routes/app/Scenes'
 import Scene from '../client-side-routes/app/Scene'
 import UpdatePassword from '../client-side-routes/app/UpdatePassword'
-
+import Devices from '../client-side-routes/app/Devices'
 
 const ShowEmailNotification = () => {
   const auth = useAuth()
@@ -63,10 +63,11 @@ const App = () => {
         <ShowEmailNotification />
         <div className='container mx-auto mt-12'>
           <Router basepath='/app'>
+            <Devices path='/devices' />
             <CreateScene path='/create-scene' />
             <Scenes path='/' />
             <Scene path='/scene/:sceneId' />
-            <UpdatePassword path='/update-password' />
+            <UpdatePassword path='/update-password' />  
           </Router>
         </div>
      </Layout>

@@ -51,24 +51,9 @@ const Header = ({app}) =>{
           <div className='hidden md:block'>
             <Link
               to='/d'
-              className='inline-block py-1 md:py-4 text-gray-600 mr-6 font-bold'>
-                How it Works
-              </Link>
-            <Link
-              to='#'
               className='inline-block py-1 md:py-4 text-gray-500 hover:text-gray-600 mr-6'>
-                Solutions
-              </Link>
-            <Link
-              to='#'
-              className='inline-block py-1 md:py-4 text-gray-500 hover:text-gray-600 mr-6'>
-                Pricing
-              </Link>
-            <Link
-              to='#'
-              className='inline-block py-1 md:py-4 text-gray-500 hover:text-gray-600 mr-6'>
-                Desktop
-              </Link>
+                Open Player
+            </Link>
           </div>
         </div>
 

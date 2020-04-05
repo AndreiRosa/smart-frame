@@ -1,6 +1,9 @@
 import React, {useState, useEffect} from 'react'
 import {useAuth} from '../../../lib/AuthContext'
 import firebase from '../../../lib/firebase'
+import ChromaKey from './types/ChromaKey'
+import Image from './types/Image'
+
 
 const FRAME_TYPES = {
   chromakey: {
@@ -18,9 +21,9 @@ const FRAME_TYPES = {
 }
 
 const FrameComponents = {
-  [FRAME_TYPES.chromakey.key] : ({id}) => <h1>Adde chroma key {id}</h1>,
-  [FRAME_TYPES.chromakey.image]: ({id}) => <h1>Add image {id}</h1>,
-  [FRAME_TYPES.chromakey.counter]: ({id}  ) => <h1>Add counter {id}</h1>
+  [FRAME_TYPES.chromakey.key] : ({id}) => ChromaKey,
+  [FRAME_TYPES.chromakey.image]: ({id}) => Image,
+  [FRAME_TYPES.chromakey.counter]: ({id}  ) => <h1>Component: Counter {id}</h1>
 }
 
 const Scene = ({sceneId}) => {
@@ -31,7 +34,7 @@ const Scene = ({sceneId}) => {
 
   useEffect(() => {
     if (auth.isAuthReady){
-      db
+      db 
         .collection('scenes')
         .doc(auth.udi)
         .collection('scenes')
@@ -82,13 +85,13 @@ const Scene = ({sceneId}) => {
                 </div>
             )
           }
-        )}
+        )}  
       </div>
       <div>
         {
           frames.map(frame => {
             const CurrentComp = FrameComponents[frame.type]
-            return <p><CurrentComp  id={frame.id}/></p>
+            return <p><CurrentComp  id={frame.id} frame={frame} uid={auth.uid} scene={sceneId}/></p>
           })
         }
       </div>
