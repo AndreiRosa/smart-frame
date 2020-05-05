@@ -5,12 +5,28 @@ import {useAuth} from '../../../lib/AuthContext'
 const Devices = () => {
   const auth = useAuth()
   const [deviceId, setDeviceId] = useState('')
+  const [devices, setDevices] = useState([])
   const [scenes, setScenes] = useState([])
   const [deviceStatus, setDeviceStatus] = useState('')
   const db = firebase.firestore()
 
   useEffect(() => {
     if (auth.isAuthReady){
+      db
+        .collection('devices')
+        .doc(auth.uid)
+        .collection('devices')
+        .onSnapshot(querySnapshot => {
+          const docs = []
+          querySnapshot.forEach((doc) => {
+            docs.push({
+              ...doc.data(),
+              id: doc.id
+            })
+        })
+        setDevices(docs)
+      })
+
       db
         .collection('scenes')
         .doc(auth.uid)
@@ -47,6 +63,19 @@ const Devices = () => {
     setDeviceId(event.target.value)
   }
 
+  const setSceneOnDevice = deviceId => {
+    const [select] = document.getElementsByName('device'+deviceId)
+
+    db
+      .collection('devices')
+      .doc(auth.uid)
+      .collection('devices')
+      .doc(deviceId)
+      .update({
+        scene: select.value
+      })
+  }
+
   return(
     <div>
       <h1>Devices</h1>
@@ -58,6 +87,18 @@ const Devices = () => {
           Activate Device
         </button>
         {deviceStatus}
+        <h3>Devices:</h3>
+        {device.map(device => {
+          return(
+            <div>
+              <h4>Friendly name for Device</h4>
+              <select name={'device-'+device.id}>
+                {scenes.map(scene => <option key={scene.id} value={scene.id}>{scene.name}</option>)}
+              </select>
+              <button onClick={() => setSceneOnDevice(device.id)}>Define Scene</button>
+            </div>
+          )
+        })}
        </div>
       </div>
     </div>

@@ -2,5 +2,9 @@
     {
         "path": "/app/",
         "matchPath": "/app/*"
+    },
+    {
+        "path": "/d/",
+        "matchPath": "/d/*"
     }
 ]

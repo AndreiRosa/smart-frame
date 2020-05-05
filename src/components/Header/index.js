@@ -16,6 +16,11 @@ const MyAccount = ({signOut}) => {
           </Link>
         </li>
         <li>
+          <Link to='/app/devices' className="rounded-t bg-gray-200 hover:bg-gray-400 py-2 px-4 block whitespace-no-wrap" href="#">
+            Devices
+          </Link>
+        </li>
+        <li>
           <Link to='/app/update-password' className="bg-gray-200 hover:bg-gray-400 py-2 px-4 block whitespace-no-wrap">
             Change passoword
           </Link>

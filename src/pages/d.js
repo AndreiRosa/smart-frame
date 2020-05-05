@@ -5,14 +5,20 @@ import firebase from '../lib/firebase'
 const db = firebase.firestore()
 
 const D = () => {
-  const random = Math.floor(Math.random()*999999).toString().padStart(6, '0')
-  const alreadyActivated = !!localStorage.getItem('deviceNumber') && !!localStorage.getItem('owner')
-  const number = localStorage.getItem('deviceNumber') || random
+
   const [isReady, setIsReady] = useState(false)
-  const [activated, setActivated] = useState(alreadyActivated)
+  const [activated, setActivated] = useState(false)
+  const [number, setNumber] = useState(0)
   
   useEffect(() => {
-    if(!activated){
+    const random = Math.floor(Math.random()*999999).toString().padStart(6, '0')
+    setNumber(localStorage.getItem('deviceNumber') || random)
+
+    const alreadyActivated = !!localStorage.getItem('deviceNumber') && !!localStorage.getItem('owner')
+    
+    if (alreadyActivated) setActivated(alreadyActivated)
+    
+    if(!alreadyActivated && number != 0){
       db 
       .collection('temp-devices')
       .doc(number)
@@ -25,7 +31,7 @@ const D = () => {
       })
     }
     
-  }, [activated])
+  }, [activated, number])
 
   useEffect(() => {
     let unsubscribe = null
