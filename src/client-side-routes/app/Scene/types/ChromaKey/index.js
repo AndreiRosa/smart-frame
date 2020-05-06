@@ -41,9 +41,9 @@ const ChromaKey = ({id, uid, sceneId, frame}) => {
   return(
     <div className='border-solid m-8 border-gray-200 m-8 p-8'>
       <h1 className='font-bold'>Chroma Key</h1>
-      <select onChange={onChange} name='color' value={settings.color}>
+      <select onChange={onChange} onBlur={onChange} name='color' value={settings.color}>
         {
-          COLORS.map(color => <option value={color.value}>{color.label}</option>)
+          COLORS.map(color => <option key={color.value} value={color.value}>{color.label}</option>)
         }
       </select>
       <label>

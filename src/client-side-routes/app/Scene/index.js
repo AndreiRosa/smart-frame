@@ -61,7 +61,7 @@ const Scene = ({sceneId}) => {
           setFrames(currentFrames)
       })
     }
-  }, [db, auth])
+  }, [db, auth, sceneId])
 
   const createFrame = (type) => () => {
     const newSceneRef = db
@@ -74,13 +74,17 @@ const Scene = ({sceneId}) => {
     })
   }
 
+  const onKeyDown = (type) => evt => {
+    if (evt.keyCode === 13) createFrame(type)()
+  }
+
   return(
     <div>
       <h1>{scene.name}</h1>
       <div className='grid grid-cols-4 gap-4'>
         {Object.keys(FRAME_TYPES).map( key => {
             return(
-                <div key={key} onClick={createFrame(key)} className='text-center p-4 bg-white hover:bg-gray-100 h-32 w-32 shadow-md rounded flex items-end'>
+                <div role='button' key={key} tabIndex='0' onClick={createFrame(key)} onKeyDown={onKeyDown(key)} className='text-center p-4 bg-white hover:bg-gray-100 h-32 w-32 shadow-md rounded flex items-end'>
                   <p>{FRAME_TYPES[key].label}</p>
                 </div>
             )
@@ -91,7 +95,7 @@ const Scene = ({sceneId}) => {
         {
           frames.map(frame => {
             const CurrentComp = FrameComponents[frame.type]
-            return <p><CurrentComp  id={frame.id} frame={frame} uid={auth.uid} scene={sceneId}/></p>
+            return <CurrentComp key={frame.id} id={frame.id} frame={frame} uid={auth.uid} scene={sceneId}/>
           })
         }
       </div>

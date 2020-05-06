@@ -5,20 +5,28 @@ import firebase from '../lib/firebase'
 const db = firebase.firestore()
 
 const D = () => {
-
   const [isReady, setIsReady] = useState(false)
   const [activated, setActivated] = useState(false)
   const [number, setNumber] = useState(0)
-  
-  useEffect(() => {
-    const random = Math.floor(Math.random()*999999).toString().padStart(6, '0')
-    setNumber(localStorage.getItem('deviceNumber') || random)
+  const [device, setDevice] = useState({})
+  const [currentDevice, setCurrentDevice] = useState({})
 
+  useEffect(() => {
+    if(!localStorage.getItem('deviceNumber')){
+      const random = Math.floor(Math.random()*999999).toString().padStart(6, '0')
+      localStorage.setItem('deviceNumber', random)
+      setNumber(random)
+    } else setNumber(localStorage.getItem('deviceNumber'))
+  }, [])
+
+  useEffect(() => {
     const alreadyActivated = !!localStorage.getItem('deviceNumber') && !!localStorage.getItem('owner')
     
     if (alreadyActivated) setActivated(alreadyActivated)
-    
-    if(!alreadyActivated && number != 0){
+  }, [])
+  
+  useEffect(() => {
+    if(!activated && number > 0){
       db 
       .collection('temp-devices')
       .doc(number)
@@ -26,7 +34,6 @@ const D = () => {
         lastSeen: firebase.firestore.FieldValue.serverTimestamp()
       })
       .then(() => {
-        localStorage.setItem('deviceNumber', number)
         setIsReady(true)
       })
     }
@@ -41,32 +48,37 @@ const D = () => {
         .doc(number)
         .onSnapshot(snap => {
           const deviceData = snap.data()
-          if(deviceData && deviceData.owner){
-            db
-              .collection('devices')
-              .doc(deviceData.owner)
-              .collection('devices')
-              .doc(number)
-              .set({
-                activated: true
-              })
-              .then(() => {
-                localStorage.setItem('owner', deviceData.owner)
-                setActivated(true)
-                db
-                  .collection('devices')
-                  .doc(deviceData.owner)
-                  .delete()
-                  .then(() => {
-                    
-                  })
-              })
-          }
+          if(deviceData) setDevice(deviceData)
         })
     return () => {
       if(unsubscribe) unsubscribe()
     }
-  }, [isReady, activated])
+  }, [isReady, activated, number])
+
+  useEffect(() => {
+    if(device && device.owner){
+      db
+        .collection('devices')
+        .doc(device.owner)
+        .collection('devices')
+        .doc(number)
+        .set({
+          ...device,
+          activated: true
+        })
+        .then(() => {
+          localStorage.setItem('owner', device.owner)
+          setActivated(true)
+          db
+            .collection('devices')
+            .doc(device.owner)
+            .delete()
+            .then(() => {
+              
+            })
+        })
+    }
+  }, [device, number])
 
   useEffect(() => {
     let unsubscribe = null
@@ -77,13 +89,13 @@ const D = () => {
         .collection('devices')
         .doc(localStorage.getItem('deviceNumber'))
         .onSnapshot(snap => {
-
+          setCurrentDevice(snap.data())
         }) 
     }
     return () => {
       if (unsubscribe) unsubscribe()
     }
-  })
+  }, [device, activated])
 
   return(
     <Layout>

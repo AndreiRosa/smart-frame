@@ -1,6 +1,34 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useRef} from 'react'
 import firebase from '../../../lib/firebase'
 import {useAuth} from '../../../lib/AuthContext'
+
+const Device = ({device, setSceneOnDevice, scenes}) => {
+  const selectRef = useRef()
+  
+  const setScene = () => {
+    setSceneOnDevice(device.id, selectRef.current.value)
+  }
+
+  return(
+    <div className='p-6 m-2 border rounded'>
+      <h4 className="font-bold">Device ID: {device.id}</h4>
+      <div className="w-full mb-6">
+        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor={"select-"+device.id}>
+          Scene
+        </label>
+        <div className="relative">
+          <select id={"select-"+device.id} ref={selectRef} className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+            {scenes.map(scene => <option key={scene.id} value={scene.id}>{scene.name}</option>)}
+          </select>
+          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+            <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+          </div>
+        </div>
+      </div>
+      <button onClick={setScene} className="mt-3 text-lg font-semibold bg-gray-800 w-full text-white rounded-lg px-6 py-3 block hover:text-white hover:bg-black">Define Scene</button>
+    </div>
+  )
+}
 
 const Devices = () => {
   const auth = useAuth()
@@ -63,16 +91,14 @@ const Devices = () => {
     setDeviceId(event.target.value)
   }
 
-  const setSceneOnDevice = deviceId => {
-    const [select] = document.getElementsByName('device'+deviceId)
-
+  const setSceneOnDevice = (deviceId, value) => {
     db
       .collection('devices')
       .doc(auth.uid)
       .collection('devices')
       .doc(deviceId)
       .update({
-        scene: select.value
+        scene: value
       })
   }
 
@@ -89,15 +115,7 @@ const Devices = () => {
         {deviceStatus}
         <h3>Devices:</h3>
         {device.map(device => {
-          return(
-            <div>
-              <h4>Friendly name for Device</h4>
-              <select name={'device-'+device.id}>
-                {scenes.map(scene => <option key={scene.id} value={scene.id}>{scene.name}</option>)}
-              </select>
-              <button onClick={() => setSceneOnDevice(device.id)}>Define Scene</button>
-            </div>
-          )
+          return <Device key={device.id} device={device} setSceneOnDevice={setSceneOnDevice} scenes={scenes}/>
         })}
        </div>
       </div>

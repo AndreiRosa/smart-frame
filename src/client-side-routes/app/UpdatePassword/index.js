@@ -1,5 +1,4 @@
 import React, {useState} from 'react'
-// import {Link, navigate} from 'gatsby'
 import firebase from '../../../lib/firebase'
 import {useAuth} from '../../../lib/AuthContext'
 
