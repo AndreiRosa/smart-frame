@@ -1,1 +1,0 @@
-{"version":3,"sources":["webpack:///./src/pages/d.js"],"names":["D"],"mappings":"2FAAA,gCAQeA,UANL,WACR,OACE","file":"component---src-pages-d-js-c7c3a1af6a85448b7fdb.js","sourcesContent":["import React from 'react'\r\n\r\nconst D = () => {\r\n  return(\r\n    <h1>Página Inicial</h1>\r\n  )\r\n}\r\n\r\nexport default D"],"sourceRoot":""}

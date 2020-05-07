@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react'
-import Layout from '../components/Layout'
 import firebase from '../lib/firebase'
+import ChromaKeyView from '../client-side-routes/app/Scene/types/ChromaKey/ChromaKeyView'
+import ChromaKeyView from '../client-side-routes/app/Scene/types/Image/ImageView'
 
 const db = firebase.firestore()
 
@@ -10,6 +11,8 @@ const D = () => {
   const [number, setNumber] = useState(0)
   const [device, setDevice] = useState({})
   const [currentDevice, setCurrentDevice] = useState({})
+  const [frames, setFrames] = useState([])
+  const [currentFrame, setCurrentFrame] = useState(0)
 
   useEffect(() => {
     if(!localStorage.getItem('deviceNumber')){
@@ -97,12 +100,58 @@ const D = () => {
     }
   }, [device, activated])
 
+  useEffect(() => {
+    let unsubscribe = null
+    if(currentDevice.scene){
+      if (activated){
+        unsubscribe = db 
+          .collection('frames')
+          .doc(localStorage.getItem('owner'))
+          .collection(currentDevice.scene )
+          .doc(currentDevice.scene)
+          .onSnapshot(snap => {
+            const docs = []
+            snap.forEach((doc) => {
+              docs.push({
+                ...doc.data(),
+                id: doc.id
+              })
+            })
+          setFrames(docs)
+          })
+      } 
+    }
+    return () => {
+      if (unsubscribe) unsubscribe()
+    }
+  }, [currentDevice])
+
+  useEffect(() => {
+    let timer = null
+    if(activated && frames && frames.length > 0){
+      timer = setInterval(() => {
+        setCurrentFrame(old => (old+1)%frames.length)
+      }, 5000)
+    }
+    return () => {
+      if (timer) { 
+        clearInterval(timer)
+      }
+    }
+  }, [activated, frames])
+
+  let CurrentView = null
+  if(frames && frames[currentFrame] && frames[currentFrame].type === 'chromakey') CurrentView = ChromaKeyView
+  if(frames && frames[currentFrame] && frames[currentFrame].type === 'image') CurrentView = ImageView
+
+
   return(
-    <Layout>
+    <div>
       <h1>Página Inicial</h1>
       {!activated && <h2>{number}</h2>}
-      {!activated && <h2>Device already activated!</h2>}
-    </Layout>
+      {activated && frames && CurrentView && <CurrentView frame={frames[currentFrame]}/>}
+      {activated && <div className='absolute bottom-0 right-0 bg-gray-800 text-white p-2 text-xs font-bold'>Device ID: {number} </div> }
+    </div>
   )
 }
 

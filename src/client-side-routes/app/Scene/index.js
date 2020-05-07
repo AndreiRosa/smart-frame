@@ -23,7 +23,7 @@ const FRAME_TYPES = {
 const FrameComponents = {
   [FRAME_TYPES.chromakey.key] : ({id}) => ChromaKey,
   [FRAME_TYPES.chromakey.image]: ({id}) => Image,
-  [FRAME_TYPES.chromakey.counter]: ({id}  ) => <h1>Component: Counter {id}</h1>
+  // [FRAME_TYPES.chromakey.counter]: ({id}  ) => <h1>Component: Counter {id}</h1>
 }
 
 const Scene = ({sceneId}) => {
